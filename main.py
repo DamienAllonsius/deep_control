@@ -25,23 +25,33 @@ from equation import *
 from test_case import *
 
 test_case = TEST_CASE_1
-x_uniform = np.linspace(test_case[DOMAIN][0], test_case[DOMAIN][1], test_case[POINT_X])
-mesh = Mesh(x = x_uniform)   
-# Intialise the control
-control = #TODO with the mesh
-equation = Equation(test_case, control, mesh)
+x_uniform = np.linspace(test_case['DOMAIN'][0], test_case['DOMAIN'][1], test_case['POINT_X'])
+mesh = Mesh(x = x_uniform)
 
-neural_network = Neural_network(equation.loss_function())
 
-while neural_network.loss_value > test_case[EPSILON]:
+# Intialise the equation control
+equation = Equation(test_case, mesh)
+neural_network = Neural_network(equation.get_loss_value())
+count = 0
+
+while neural_network.loss_value > test_case['EPSILON']:
+    count += 1
+    
     # update the control variable of the equation
-    equation.control = neural_network.one_step_improvement(control)
+#    equation.control = neural_network.one_step_improvement(equation.control)
 
-    # update the variable y of equation by computing the solution
+    # update the y variable of equation by computing the solution with the new control
     equation.compute_solution()
 
-    # compute the loss_function
-    loss  = equation.loss_function()
+    # use the loss function to compute the loss value
+    loss  = equation.get_loss_value()
 
-    # update the loss parameter of the neural network
+    # print the result
+    print('iteration : ' + str(count) + '. Loss value: ' + str(loss))
+    
+    # update the loss value of the neural network
     neural_network.loss_value = loss
+
+
+# plot the solution
+user_interface = UI(test_case, mesh, equation.y)

@@ -4,14 +4,14 @@ Simone Totaro
 
 import numpy as np
 
-def class Neural_network(object):
+class Neural_network(object):
     """
     The neural network approximates the control.
     The loss function is given by
     """
 
     def __init__(self, loss_value):
-        loss_value = loss_value
+        self.loss_value = loss_value
     
     def one_step_improvement(self, v):
         """
